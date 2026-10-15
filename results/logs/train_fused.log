@@ -1,0 +1,152 @@
+  epoch 1/12 step 20/2400 loss 22.1180 lr 3.50e-04
+  epoch 1/12 step 40/2400 loss 19.5609 lr 6.83e-04
+  epoch 1/12 step 60/2400 loss 17.2511 lr 1.02e-03
+  epoch 1/12 step 80/2400 loss 15.5730 lr 1.35e-03
+  epoch 1/12 step 100/2400 loss 14.3320 lr 1.68e-03
+  epoch 1/12 step 120/2400 loss 13.2951 lr 2.00e-03
+  epoch 1/12 step 140/2400 loss 12.4883 lr 2.00e-03
+  epoch 1/12 step 160/2400 loss 11.7541 lr 2.00e-03
+  epoch 1/12 step 180/2400 loss 11.1917 lr 2.00e-03
+  epoch 1/12 step 200/2400 loss 10.6655 lr 1.99e-03
+epoch 1/12 train_loss=10.6655 lr=1.99e-03 (51.3s)
+  epoch 2/12 step 220/2400 loss 5.9346 lr 1.99e-03
+  epoch 2/12 step 240/2400 loss 5.8181 lr 1.99e-03
+  epoch 2/12 step 260/2400 loss 5.8252 lr 1.98e-03
+  epoch 2/12 step 280/2400 loss 5.7806 lr 1.98e-03
+  epoch 2/12 step 300/2400 loss 5.7804 lr 1.97e-03
+  epoch 2/12 step 320/2400 loss 5.7155 lr 1.96e-03
+  epoch 2/12 step 340/2400 loss 5.6614 lr 1.95e-03
+  epoch 2/12 step 360/2400 loss 5.6200 lr 1.95e-03
+  epoch 2/12 step 380/2400 loss 5.5902 lr 1.94e-03
+  epoch 2/12 step 400/2400 loss 5.5638 lr 1.93e-03
+epoch 2/12 train_loss=5.5638 lr=1.93e-03 (102.2s)
+  epoch 3/12 step 420/2400 loss 4.9912 lr 1.92e-03
+  epoch 3/12 step 440/2400 loss 5.0295 lr 1.90e-03
+  epoch 3/12 step 460/2400 loss 5.1186 lr 1.89e-03
+  epoch 3/12 step 480/2400 loss 5.0836 lr 1.88e-03
+  epoch 3/12 step 500/2400 loss 5.0357 lr 1.87e-03
+  epoch 3/12 step 520/2400 loss 5.0358 lr 1.85e-03
+  epoch 3/12 step 540/2400 loss 5.0259 lr 1.84e-03
+  epoch 3/12 step 560/2400 loss 5.0301 lr 1.82e-03
+  epoch 3/12 step 580/2400 loss 5.0129 lr 1.81e-03
+  epoch 3/12 step 600/2400 loss 5.0175 lr 1.79e-03
+epoch 3/12 train_loss=5.0175 lr=1.79e-03 (152.9s)
+  epoch 4/12 step 620/2400 loss 4.8624 lr 1.77e-03
+  epoch 4/12 step 640/2400 loss 4.8332 lr 1.75e-03
+  epoch 4/12 step 660/2400 loss 4.7940 lr 1.74e-03
+  epoch 4/12 step 680/2400 loss 4.8075 lr 1.72e-03
+  epoch 4/12 step 700/2400 loss 4.7900 lr 1.70e-03
+  epoch 4/12 step 720/2400 loss 4.8109 lr 1.68e-03
+  epoch 4/12 step 740/2400 loss 4.7835 lr 1.66e-03
+  epoch 4/12 step 760/2400 loss 4.7683 lr 1.64e-03
+  epoch 4/12 step 780/2400 loss 4.7409 lr 1.61e-03
+  epoch 4/12 step 800/2400 loss 4.7225 lr 1.59e-03
+epoch 4/12 train_loss=4.7225 lr=1.59e-03 (203.9s)
+  epoch 5/12 step 820/2400 loss 4.4501 lr 1.57e-03
+  epoch 5/12 step 840/2400 loss 4.5232 lr 1.55e-03
+  epoch 5/12 step 860/2400 loss 4.5395 lr 1.52e-03
+  epoch 5/12 step 880/2400 loss 4.5164 lr 1.50e-03
+  epoch 5/12 step 900/2400 loss 4.5068 lr 1.48e-03
+  epoch 5/12 step 920/2400 loss 4.5171 lr 1.45e-03
+  epoch 5/12 step 940/2400 loss 4.5180 lr 1.43e-03
+  epoch 5/12 step 960/2400 loss 4.5218 lr 1.40e-03
+  epoch 5/12 step 980/2400 loss 4.5112 lr 1.38e-03
+  epoch 5/12 step 1000/2400 loss 4.4982 lr 1.35e-03
+epoch 5/12 train_loss=4.4982 lr=1.35e-03 (261.9s)
+  epoch 6/12 step 1020/2400 loss 4.0642 lr 1.32e-03
+  epoch 6/12 step 1040/2400 loss 4.1972 lr 1.30e-03
+  epoch 6/12 step 1060/2400 loss 4.1801 lr 1.27e-03
+  epoch 6/12 step 1080/2400 loss 4.2059 lr 1.25e-03
+  epoch 6/12 step 1100/2400 loss 4.2177 lr 1.22e-03
+  epoch 6/12 step 1120/2400 loss 4.2407 lr 1.19e-03
+  epoch 6/12 step 1140/2400 loss 4.2353 lr 1.16e-03
+  epoch 6/12 step 1160/2400 loss 4.2484 lr 1.14e-03
+  epoch 6/12 step 1180/2400 loss 4.2662 lr 1.11e-03
+  epoch 6/12 step 1200/2400 loss 4.2512 lr 1.08e-03
+epoch 6/12 train_loss=4.2512 lr=1.08e-03 (320.9s)
+  epoch 7/12 step 1220/2400 loss 4.1287 lr 1.06e-03
+  epoch 7/12 step 1240/2400 loss 4.1938 lr 1.03e-03
+  epoch 7/12 step 1260/2400 loss 4.1697 lr 1.00e-03
+  epoch 7/12 step 1280/2400 loss 4.1357 lr 9.72e-04
+  epoch 7/12 step 1300/2400 loss 4.1006 lr 9.45e-04
+  epoch 7/12 step 1320/2400 loss 4.0993 lr 9.17e-04
+  epoch 7/12 step 1340/2400 loss 4.0901 lr 8.90e-04
+  epoch 7/12 step 1360/2400 loss 4.0608 lr 8.63e-04
+  epoch 7/12 step 1380/2400 loss 4.0739 lr 8.35e-04
+  epoch 7/12 step 1400/2400 loss 4.0803 lr 8.08e-04
+epoch 7/12 train_loss=4.0803 lr=8.08e-04 (379.1s)
+  epoch 8/12 step 1420/2400 loss 3.8524 lr 7.81e-04
+  epoch 8/12 step 1440/2400 loss 3.7937 lr 7.55e-04
+  epoch 8/12 step 1460/2400 loss 3.8043 lr 7.28e-04
+  epoch 8/12 step 1480/2400 loss 3.8177 lr 7.01e-04
+  epoch 8/12 step 1500/2400 loss 3.8349 lr 6.75e-04
+  epoch 8/12 step 1520/2400 loss 3.8263 lr 6.49e-04
+  epoch 8/12 step 1540/2400 loss 3.8296 lr 6.24e-04
+  epoch 8/12 step 1560/2400 loss 3.8355 lr 5.98e-04
+  epoch 8/12 step 1580/2400 loss 3.8356 lr 5.73e-04
+  epoch 8/12 step 1600/2400 loss 3.8329 lr 5.48e-04
+epoch 8/12 train_loss=3.8329 lr=5.48e-04 (438.6s)
+  epoch 9/12 step 1620/2400 loss 3.6638 lr 5.24e-04
+  epoch 9/12 step 1640/2400 loss 3.6832 lr 5.00e-04
+  epoch 9/12 step 1660/2400 loss 3.6505 lr 4.76e-04
+  epoch 9/12 step 1680/2400 loss 3.6372 lr 4.53e-04
+  epoch 9/12 step 1700/2400 loss 3.6438 lr 4.30e-04
+  epoch 9/12 step 1720/2400 loss 3.6384 lr 4.08e-04
+  epoch 9/12 step 1740/2400 loss 3.6340 lr 3.86e-04
+  epoch 9/12 step 1760/2400 loss 3.6366 lr 3.64e-04
+  epoch 9/12 step 1780/2400 loss 3.6252 lr 3.43e-04
+  epoch 9/12 step 1800/2400 loss 3.6344 lr 3.23e-04
+epoch 9/12 train_loss=3.6344 lr=3.23e-04 (498.2s)
+  epoch 10/12 step 1820/2400 loss 3.4454 lr 3.03e-04
+  epoch 10/12 step 1840/2400 loss 3.4204 lr 2.83e-04
+  epoch 10/12 step 1860/2400 loss 3.4867 lr 2.64e-04
+  epoch 10/12 step 1880/2400 loss 3.4678 lr 2.46e-04
+  epoch 10/12 step 1900/2400 loss 3.4516 lr 2.28e-04
+  epoch 10/12 step 1920/2400 loss 3.4428 lr 2.11e-04
+  epoch 10/12 step 1940/2400 loss 3.4283 lr 1.94e-04
+  epoch 10/12 step 1960/2400 loss 3.4421 lr 1.78e-04
+  epoch 10/12 step 1980/2400 loss 3.4561 lr 1.63e-04
+  epoch 10/12 step 2000/2400 loss 3.4507 lr 1.48e-04
+epoch 10/12 train_loss=3.4507 lr=1.48e-04 (559.1s)
+  epoch 11/12 step 2020/2400 loss 3.2586 lr 1.34e-04
+  epoch 11/12 step 2040/2400 loss 3.2876 lr 1.21e-04
+  epoch 11/12 step 2060/2400 loss 3.3098 lr 1.08e-04
+  epoch 11/12 step 2080/2400 loss 3.3005 lr 9.56e-05
+  epoch 11/12 step 2100/2400 loss 3.2819 lr 8.42e-05
+  epoch 11/12 step 2120/2400 loss 3.2894 lr 7.35e-05
+  epoch 11/12 step 2140/2400 loss 3.2904 lr 6.35e-05
+  epoch 11/12 step 2160/2400 loss 3.3007 lr 5.42e-05
+  epoch 11/12 step 2180/2400 loss 3.2996 lr 4.56e-05
+  epoch 11/12 step 2200/2400 loss 3.3116 lr 3.77e-05
+epoch 11/12 train_loss=3.3116 lr=3.77e-05 (618.2s)
+  epoch 12/12 step 2220/2400 loss 3.1578 lr 3.06e-05
+  epoch 12/12 step 2240/2400 loss 3.1893 lr 2.42e-05
+  epoch 12/12 step 2260/2400 loss 3.2215 lr 1.85e-05
+  epoch 12/12 step 2280/2400 loss 3.2175 lr 1.36e-05
+  epoch 12/12 step 2300/2400 loss 3.2433 lr 9.48e-06
+  epoch 12/12 step 2320/2400 loss 3.2437 lr 6.07e-06
+  epoch 12/12 step 2340/2400 loss 3.2457 lr 3.42e-06
+  epoch 12/12 step 2360/2400 loss 3.2449 lr 1.52e-06
+  epoch 12/12 step 2380/2400 loss 3.2368 lr 3.80e-07
+  epoch 12/12 step 2400/2400 loss 3.2401 lr 0.00e+00
+epoch 12/12 train_loss=3.2401 lr=0.00e+00 (682.1s)
+checkpoint -> runs/fused/ckpt.pt  params=449996  wall=682.1s  val_loss=4.9907
+== run summary ==
+{
+  "name": "fused",
+  "out": "runs/fused",
+  "checkpoint": "runs/fused/ckpt.pt",
+  "params": 449996,
+  "epochs": 12,
+  "steps": 2400,
+  "wall_clock_s": 682.0782198905945,
+  "final_train_loss": 3.240140949487686,
+  "val_loss": 4.9906638765335085,
+  "modalities": [
+    "camera",
+    "lidar"
+  ],
+  "device": "cpu",
+  "distributed": false,
+  "world_size": 1
+}
