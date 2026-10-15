@@ -344,8 +344,10 @@ predictions (filled). Middle/right: ground-truth and predicted occupancy.
 
 ### Tests
 
-`ruff check .` is clean and `pytest -q` reports **81 passed in 8.56 s** (full log:
-`results/logs/tests.log`). The suite covers the pillar scatter against a slow reference
+`ruff check .` is clean and the suite reports **81 passed in 8.68 s** (full log:
+`results/logs/tests.log`; `pytest -q` runs the same suite — the log resets `addopts`
+only so the summary line is visible when stdout is not a terminal). The suite covers the
+pillar scatter against a slow reference
 loop, the LSS projection round-trip and BEV-pool mass conservation, target rendering
 against ray-cast visibility, analytic rotated-IoU cases, hand-computed AP, hand-computed
 CLEAR MOT (including an exact ID-switch/MOTA scenario), occupancy IoU on hand-built
@@ -389,7 +391,8 @@ subsets.
   lidar ray reached them, including everything below the ground plane). `mIoU_observed`
   (free + occupied only) is reported alongside to make that explicit.
 * Inference latency was measured inside the ablation run on a shared 8-core machine, so the
-  values are indicative. The standalone `scripts/eval.py` pass, run later under heavier load,
-  reported 87.6 ms/frame for the same checkpoint (`results/detection_fused.json`).
+  values are indicative. The standalone `scripts/eval.py` pass, run later on an idle machine
+  with the same checkpoint, reported 29.8 ms/frame (`results/detection_fused.json`) — the
+  spread between the two is machine load, not a code difference.
 * The Open3D viewer is optional (`pip install -e '.[viz]'`); without it the module prints a
   hint and returns `None` instead of failing, and no reported metric depends on it.

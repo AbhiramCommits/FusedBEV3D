@@ -67,5 +67,5 @@
     "lidar"
   ],
   "checkpoint": "runs/fused/ckpt.pt",
-  "ms_per_frame": 87.56031394004822
+  "ms_per_frame": 29.825725555419922
 }

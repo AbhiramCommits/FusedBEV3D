@@ -27,6 +27,7 @@
     2.0,
     4.0
   ],
+  "ms_per_frame": 30.324759483337402,
   "split": "val",
   "modalities": [
     "camera",
@@ -37,12 +38,11 @@
   "association": "hungarian",
   "association_gate": 4.0,
   "eval_gate": 2.0,
-  "ms_per_frame": 43.358609676361084,
   "tracker": {
     "max_age": 2,
     "min_hits": 1,
     "dist_gate": 4.0,
-    "report_threshold": 0.4,
-    "method": "hungarian"
+    "method": "hungarian",
+    "report_threshold": 0.4
   }
 }

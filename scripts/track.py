@@ -5,10 +5,10 @@ Example::
 
     python scripts/track.py --ckpt runs/fused/ckpt.pt
 
-Uses :class:`~fusedbev3d.tracking.tracker.Greedy3DTracker` (Kalman-filtered,
-Hungarian association by default; ``--assoc greedy`` switches to greedy) and
-reports CLEAR-MOT metrics (MOTA, MOTP, ID switches, FP/FN, MT/ML).  Results are
-written to ``results/tracking_<name>.json``.
+Uses :class:`~fusedbev3d.tracking.tracker.Greedy3DTracker` (Kalman-filtered, two-stage
+Hungarian association by default; ``--assoc greedy`` switches to greedy) and reports
+CLEAR-MOT metrics (MOTA, MOTP, ID switches, FP/FN, MT/ML) plus a multi-gate
+AMOTA-style average.  Results are written to ``results/tracking_<name>.json``.
 """
 
 from __future__ import annotations
@@ -16,20 +16,16 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-import time
 from pathlib import Path
 
-import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from fusedbev3d.config import Config  # noqa: E402
-from fusedbev3d.data.registry import build_dataset  # noqa: E402
-from fusedbev3d.data.synth import collate_fn  # noqa: E402
-from fusedbev3d.eval.tracking import evaluate_tracking, print_tracking_table  # noqa: E402
+from fusedbev3d.eval.tracking import print_tracking_table  # noqa: E402
+from fusedbev3d.inference import make_loader, track_split  # noqa: E402
 from fusedbev3d.models.fusedbev3d import normalize_modalities  # noqa: E402
-from fusedbev3d.tracking.tracker import Greedy3DTracker  # noqa: E402
 from fusedbev3d.train import load_checkpoint  # noqa: E402
 
 
@@ -39,7 +35,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--ckpt", required=True, help="checkpoint produced by scripts/train.py")
     p.add_argument("--split", default="val", choices=["train", "val"])
     p.add_argument("--scenes", type=int, default=None)
-    p.add_argument("--score-threshold", type=float, default=0.1)
+    p.add_argument("--score-threshold", type=float, default=0.1, help="detections below this are not tracked")
     p.add_argument("--topk", type=int, default=100)
     p.add_argument("--assoc", default="hungarian", choices=["hungarian", "greedy"])
     p.add_argument("--dist-gate", type=float, default=4.0, help="association gate (m)")
@@ -51,75 +47,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--out", default=None, help="tracking JSON output path")
     p.add_argument("--device", default="cpu")
     return p.parse_args(argv)
-
-
-@torch.no_grad()
-def run_tracking(
-    model,
-    cfg: Config,
-    split: str,
-    scenes: int | None,
-    score_threshold: float,
-    topk: int,
-    tracker_kwargs: dict,
-    device: torch.device,
-) -> tuple[list[dict], list[np.ndarray], float]:
-    """Track a whole split frame by frame, resetting the tracker per sequence.
-
-    Args:
-        model: Loaded FusedBEV3D model.
-        cfg: Configuration from the checkpoint.
-        split: Split name.
-        scenes: Optional scene-count override.
-        score_threshold: Minimum detection score fed to the tracker.
-        topk: Heatmap peaks decoded per frame.
-        tracker_kwargs: Constructor kwargs for :class:`Greedy3DTracker`.
-        device: Torch device.
-
-    Returns:
-        ``(predictions, targets, ms_per_frame)`` where predictions carry
-        ``track_ids``.
-    """
-    ds = build_dataset(cfg.data.name, split, cfg, num_scenes=scenes)
-    loader = torch.utils.data.DataLoader(
-        ds, batch_size=cfg.train.batch_size, shuffle=False, collate_fn=collate_fn, num_workers=0
-    )
-    model.eval()
-    tracker = Greedy3DTracker(**tracker_kwargs)
-    predictions: list[dict] = []
-    targets: list[np.ndarray] = []
-    current_scene = -1
-    frames = 0
-    start = time.time()
-    for batch in loader:
-        batch = {k: (v.to(device) if torch.is_tensor(v) else v) for k, v in batch.items()}
-        out = model(batch, decode=True, topk=topk)
-        det = out["detections"]
-        keep = det["keep"] & (det["scores"] >= score_threshold)
-        for i in range(det["boxes"].shape[0]):
-            scene = int(batch["scene_id"][i])
-            if scene != current_scene:
-                tracker.reset()
-                current_scene = scene
-            mask = keep[i]
-            tracked = tracker.update(
-                det["boxes"][i][mask].cpu().numpy(),
-                det["scores"][i][mask].cpu().numpy(),
-                det["classes"][i][mask].cpu().numpy(),
-            )
-            predictions.append(
-                {
-                    "boxes": np.stack([t["box"] for t in tracked]) if tracked else np.zeros((0, 9)),
-                    "scores": np.array([t["score"] for t in tracked], dtype=np.float64),
-                    "classes": np.array([t["class_id"] for t in tracked], dtype=np.int64),
-                    "track_ids": np.array([t["track_id"] for t in tracked], dtype=np.int64),
-                    "frame_id": int(batch["frame_id"][i]),
-                }
-            )
-            targets.append(batch["boxes"][i].cpu().numpy())
-            frames += 1
-    ms = (time.time() - start) * 1000.0 / max(frames, 1)
-    return predictions, targets, ms
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -137,13 +64,21 @@ def main(argv: list[str] | None = None) -> int:
         "max_age": args.max_age,
         "min_hits": args.min_hits,
         "dist_gate": args.dist_gate,
-        "report_threshold": args.report_threshold,
         "method": args.assoc,
+        "report_threshold": args.report_threshold,
     }
-    preds, targets, ms = run_tracking(
-        model, cfg, args.split, args.scenes, args.score_threshold, args.topk, tracker_kwargs, device
+    loader = make_loader(cfg, args.split, args.scenes, cfg.train.batch_size)
+    result = track_split(
+        model,
+        cfg,
+        loader,
+        tracker_kwargs=tracker_kwargs,
+        score_threshold=args.score_threshold,
+        topk=args.topk,
+        device=device,
+        eval_gate=args.eval_gate,
+        modalities=cfg.train.modalities,
     )
-    result = evaluate_tracking(preds, targets, dist_threshold=args.eval_gate)
     result.update(
         {
             "split": args.split,
@@ -153,7 +88,6 @@ def main(argv: list[str] | None = None) -> int:
             "association": args.assoc,
             "association_gate": args.dist_gate,
             "eval_gate": args.eval_gate,
-            "ms_per_frame": ms,
             "tracker": tracker_kwargs,
         }
     )

@@ -1,6 +1,7 @@
 $ ruff check .
 All checks passed!
 
-$ pytest -q --maxfail=1
+$ pytest -o addopts="" -q --maxfail=1   # addopts reset so the summary prints in a non-TTY capture
 ........................................................................ [ 88%]
 .........                                                                [100%]
+81 passed in 8.68s
