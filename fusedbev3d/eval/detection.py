@@ -31,6 +31,7 @@ __all__ = [
     "iou_3d",
     "match_frame",
     "average_precision",
+    "precision_recall_curves",
     "evaluate_detection",
     "print_table",
 ]
@@ -406,6 +407,59 @@ def evaluate_detection(
             "AVE": float(tp_errors["AVE"][c]) if np.isfinite(tp_errors["AVE"][c]) else float("nan"),
         }
     return result
+
+
+def precision_recall_curves(
+    predictions: Sequence[dict[str, Any]],
+    targets: Sequence[torch.Tensor | np.ndarray],
+    class_names: Sequence[str] = ("car", "pedestrian", "cyclist"),
+    dist_threshold: float = PRIMARY_THRESHOLD,
+) -> dict[str, dict[str, list[float]]]:
+    """Per-class precision/recall curves at one matching distance.
+
+    Args:
+        predictions: Per-frame prediction dicts (see :func:`evaluate_detection`).
+        targets: Per-frame ``(G, 11)`` ground-truth boxes.
+        class_names: Class names indexed by class id.
+        dist_threshold: Matching distance in metres.
+
+    Returns:
+        ``{class_name: {"recall": [...], "precision": [...], "ap": float}}``.
+    """
+    gt_boxes = [np.asarray(t, dtype=np.float64).reshape(-1, 11) for t in targets]
+    curves: dict[str, dict[str, list[float]]] = {}
+    for c, name in enumerate(class_names):
+        flat: list[tuple[float, int]] = []
+        num_gt = 0
+        for f, pred in enumerate(predictions):
+            boxes = np.asarray(pred["boxes"], dtype=np.float64).reshape(-1, 9)
+            scores = np.asarray(pred["scores"], dtype=np.float64).reshape(-1)
+            classes = np.asarray(pred["classes"], dtype=np.int64).reshape(-1)
+            num_gt += int((gt_boxes[f][:, 9] == c).sum()) if gt_boxes[f].shape[0] else 0
+            keep = classes == c
+            pc, ps = boxes[keep], scores[keep]
+            matched: dict[int, int] = {}
+            if pc.shape[0]:
+                matches, _, _ = match_frame(pc, ps, np.full(pc.shape[0], c), gt_boxes[f], dist_threshold)
+                matched = {m[0]: m[1] for m in matches}
+            for i in range(pc.shape[0]):
+                flat.append((float(ps[i]), 1 if i in matched else 0))
+        ordered = sorted(flat, key=lambda r: -r[0])
+        tp = np.cumsum([r[1] for r in ordered]) if ordered else np.zeros(0)
+        fp = np.cumsum([1 - r[1] for r in ordered]) if ordered else np.zeros(0)
+        recall = (tp / max(num_gt, 1)).tolist()
+        precision = (tp / np.maximum(tp + fp, 1e-12)).tolist()
+        ap = average_precision(
+            np.array([r[1] for r in ordered], dtype=np.float64) if ordered else np.zeros(0),
+            np.array([1 - r[1] for r in ordered], dtype=np.float64) if ordered else np.ones(0),
+            num_gt,
+        )
+        curves[name] = {
+            "recall": [0.0, *recall],
+            "precision": [1.0, *precision],
+            "ap": float(ap) if np.isfinite(ap) else 0.0,
+        }
+    return curves
 
 
 def print_table(result: dict[str, Any], title: str = "3D detection (nuScenes-style)") -> str:

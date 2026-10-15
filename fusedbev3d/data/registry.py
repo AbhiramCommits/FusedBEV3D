@@ -61,7 +61,8 @@ def build_dataset(
         raise ValueError(f"unknown dataset {name!r}; available: {DATASETS}")
     if grid is None and isinstance(cfg, Config):
         grid = cfg.grid
-    cache = cache_path(split, data_cfg, name) if use_cache else None
+    # a scene-count override must bypass the materialised cache, whose size is fixed
+    cache = cache_path(split, data_cfg, name) if (use_cache and num_scenes is None) else None
 
     if name == "synth":
         return SyntheticDrivingDataset(

@@ -18,8 +18,6 @@ htmlcov/
 data/cache/
 data/nuscenes/
 runs/
-results/plots/
-results/qualitative/
 
 # OS
 .DS_Store

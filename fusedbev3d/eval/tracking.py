@@ -100,7 +100,7 @@ def _clear_mot(
     matches = 0
     motp_sum = 0.0
     gt_count = 0
-    last_match: dict[int, int] = {}  # pred track id -> gt track id
+    last_track_of_gt: dict[int, int] = {}
     gt_frames: dict[int, int] = {}
     gt_matched: dict[int, int] = {}
     n_pred = 0
@@ -124,9 +124,11 @@ def _clear_mot(
             gid = int(gt[gi, 10])
             gt_matched[gid] = gt_matched.get(gid, 0) + 1
             tid = int(track_ids[pi]) if pi < track_ids.shape[0] else pi
-            if tid in last_match and last_match[tid] != gid:
+            # CLEAR MOT counts an ID switch when a ground-truth object's assigned
+            # track id changes relative to its last association (even across a gap).
+            if gid in last_track_of_gt and last_track_of_gt[gid] != tid:
                 id_switches += 1
-            last_match[tid] = gid
+            last_track_of_gt[gid] = tid
         false_pos += boxes.shape[0] - len(matched_p)
         false_neg += gt.shape[0] - len(matched_g)
 
