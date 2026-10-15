@@ -1,0 +1,71 @@
+{
+  "mIoU": 0.8082194904214477,
+  "mIoU_observed": 0.7775445763680646,
+  "per_class_iou": {
+    "free": 0.8744019403798003,
+    "occupied": 0.6806872123563288,
+    "unknown": 0.8695693185282136
+  },
+  "per_class": {
+    "free": {
+      "iou": 0.8744019403798003,
+      "precision": 0.9479954435677825,
+      "recall": 0.9184579903364595,
+      "gt_voxels": 1847563,
+      "pred_voxels": 1789997
+    },
+    "occupied": {
+      "iou": 0.6806872123563288,
+      "precision": 0.682386285861522,
+      "recall": 0.9963554109215402,
+      "gt_voxels": 425288,
+      "pred_voxels": 620965
+    },
+    "unknown": {
+      "iou": 0.8695693185282136,
+      "precision": 0.9683573901597471,
+      "recall": 0.8950003537834812,
+      "gt_voxels": 1823149,
+      "pred_voxels": 1685038
+    }
+  },
+  "occupied_precision": 0.682386285861522,
+  "occupied_recall": 0.9963554109215402,
+  "occupied_iou": 0.6806872123563288,
+  "accuracy": 0.91610498046875,
+  "num_voxels": 4096000,
+  "class_fraction": {
+    "free": 0.451065185546875,
+    "occupied": 0.103830078125,
+    "unknown": 0.445104736328125
+  },
+  "confusion": [
+    [
+      1696909,
+      299,
+      92789
+    ],
+    [
+      98586,
+      423738,
+      98641
+    ],
+    [
+      52068,
+      1251,
+      1631719
+    ]
+  ],
+  "class_names": [
+    "free",
+    "occupied",
+    "unknown"
+  ],
+  "split": "val",
+  "modalities": [
+    "camera",
+    "lidar"
+  ],
+  "checkpoint": "runs/fused/ckpt.pt",
+  "ms_per_frame": 31.461246013641357
+}

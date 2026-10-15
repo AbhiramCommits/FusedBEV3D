@@ -68,7 +68,7 @@
       "AVE": 0.9975174208013871
     }
   },
-  "ms_per_frame": 30.41496992111206,
+  "ms_per_frame": 31.461246013641357,
   "split": "val",
   "modalities": [
     "camera",

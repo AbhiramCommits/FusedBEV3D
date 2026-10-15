@@ -1,0 +1,19 @@
+== 3D detection - fused [camera+lidar] on val ==
+class             AP   AP@0.5   AP@1.0   AP@2.0   AP@4.0     ATE     AOE    nGT   nTP
+-------------------------------------------------------------------------------------
+car           0.9495   0.5050   0.9037   0.9495   0.9581  0.2398  0.5884    460   446
+pedestrian    0.8028   0.5191   0.7942   0.8028   0.8224  0.2132  0.6101    360   332
+cyclist       0.6955   0.3977   0.6714   0.6955   0.7058  0.2724  0.7056    240   234
+-------------------------------------------------------------------------------------
+mAP=0.8159  NDS=0.6356  (threshold 2.0 m)  mATE=0.7582  mASE=0.3411  mAOE=0.3653  mAVE=0.1760
+frames=200  gt=1060  preds=4794  mean TP BEV IoU=0.3770
+wrote results/detection_fused.json
+== occupancy - fused [camera+lidar] on val ==
+class           IoU     prec   recall      gt_vox    pred_vox
+-------------------------------------------------------------
+free         0.8744   0.9480   0.9185     1847563     1789997
+occupied     0.6807   0.6824   0.9964      425288      620965
+unknown      0.8696   0.9684   0.8950     1823149     1685038
+-------------------------------------------------------------
+mIoU=0.8082  mIoU(free+occupied)=0.7775  occupied precision=0.6824 recall=0.9964  overall accuracy=0.9161
+wrote results/occupancy_fused.json

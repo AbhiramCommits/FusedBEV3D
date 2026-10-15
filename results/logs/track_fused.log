@@ -1,0 +1,8 @@
+== tracking - fused [camera+lidar] on val ==
+gate            : 2.0 m
+MOTA            : 0.5802   MOTP: 0.4375 m   ID switches: 76
+TP/FP/FN        : 862/171/198   recall 0.8132  precision 0.8345
+GT tracks       : 53   MT 37  PT 13  ML 3
+MOTA by gate    : 0.5:0.1236, 1.0:0.5443, 2.0:0.5802, 4.0:0.5953
+AMOTA-style avg : 0.4608
+wrote results/tracking_fused.json

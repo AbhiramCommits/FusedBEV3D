@@ -19,6 +19,7 @@ import sys
 import time
 from pathlib import Path
 
+import numpy as np
 import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -27,6 +28,7 @@ from fusedbev3d.config import Config  # noqa: E402
 from fusedbev3d.data.registry import build_dataset  # noqa: E402
 from fusedbev3d.data.synth import collate_fn  # noqa: E402
 from fusedbev3d.eval.detection import evaluate_detection, print_table  # noqa: E402
+from fusedbev3d.eval.occupancy import evaluate_occupancy, print_occupancy_table  # noqa: E402
 from fusedbev3d.models.fusedbev3d import normalize_modalities  # noqa: E402
 from fusedbev3d.train import load_checkpoint  # noqa: E402
 
@@ -45,6 +47,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--score-threshold", type=float, default=PREDICT_SCORE_THRESHOLD)
     p.add_argument("--topk", type=int, default=DECODE_TOPK)
     p.add_argument("--out", default=None, help="detection JSON output path")
+    p.add_argument("--occupancy-out", default=None, help="occupancy JSON output path")
+    p.add_argument("--no-occupancy", action="store_true", help="skip the occupancy evaluation")
     p.add_argument("--device", default="cpu")
     p.add_argument("--json", action="store_true", help="also print the raw metrics JSON")
     return p.parse_args(argv)
@@ -60,8 +64,8 @@ def predict_split(
     score_threshold: float,
     topk: int,
     device: torch.device,
-) -> tuple[list[dict], list[torch.Tensor], float]:
-    """Run the detector over a split and collect per-frame predictions.
+) -> tuple[list[dict], list[torch.Tensor], np.ndarray, np.ndarray, float]:
+    """Run the detector over a split and collect predictions, GT and occupancy.
 
     Args:
         model: Loaded :class:`~fusedbev3d.models.fusedbev3d.FusedBEV3D`.
@@ -74,7 +78,7 @@ def predict_split(
         device: Torch device.
 
     Returns:
-        ``(predictions, targets, ms_per_frame)``.
+        ``(predictions, targets, occupancy_pred, occupancy_true, ms_per_frame)``.
     """
     ds = build_dataset(cfg.data.name, split, cfg, num_scenes=scenes)
     loader = torch.utils.data.DataLoader(
@@ -83,6 +87,8 @@ def predict_split(
     model.eval()
     predictions: list[dict] = []
     targets: list[torch.Tensor] = []
+    occ_pred: list[np.ndarray] = []
+    occ_true: list[np.ndarray] = []
     frames = 0
     start = time.time()
     for batch in loader:
@@ -100,9 +106,17 @@ def predict_split(
                 }
             )
             targets.append(batch["boxes"][i].cpu())
+        occ_pred.append(model.occupancy_head.predict(out["occupancy"]).cpu().numpy())
+        occ_true.append(batch["occupancy"].cpu().numpy())
         frames += det["boxes"].shape[0]
     ms = (time.time() - start) * 1000.0 / max(frames, 1)
-    return predictions, targets, ms
+    return (
+        predictions,
+        targets,
+        np.concatenate(occ_pred, axis=0),
+        np.concatenate(occ_true, axis=0),
+        ms,
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -117,7 +131,7 @@ def main(argv: list[str] | None = None) -> int:
     model.to(device)
     batch_size = args.batch_size or cfg.train.batch_size
 
-    preds, targets, ms = predict_split(
+    preds, targets, occ_pred, occ_true, ms = predict_split(
         model, cfg, args.split, args.scenes, batch_size, args.score_threshold, args.topk, device
     )
     det = evaluate_detection(preds, targets, cfg.model.class_names)
@@ -134,8 +148,26 @@ def main(argv: list[str] | None = None) -> int:
     out.write_text(json.dumps(det, indent=2))
     print_table(det, title=f"3D detection - {name} [{'+'.join(cfg.train.modalities)}] on {args.split}")
     print(f"wrote {out}")
+
+    payload = {"detection": det}
+    if not args.no_occupancy:
+        occ = evaluate_occupancy(occ_pred, occ_true)
+        occ.update(
+            {
+                "split": args.split,
+                "modalities": list(cfg.train.modalities),
+                "checkpoint": str(args.ckpt),
+                "ms_per_frame": ms,
+            }
+        )
+        occ_out = Path(args.occupancy_out) if args.occupancy_out else Path("results") / f"occupancy_{name}.json"
+        occ_out.parent.mkdir(parents=True, exist_ok=True)
+        occ_out.write_text(json.dumps(occ, indent=2))
+        print_occupancy_table(occ, title=f"occupancy - {name} [{'+'.join(cfg.train.modalities)}] on {args.split}")
+        print(f"wrote {occ_out}")
+        payload["occupancy"] = occ
     if args.json:
-        print(json.dumps(det, indent=2))
+        print(json.dumps(payload, indent=2))
     return 0
 
 

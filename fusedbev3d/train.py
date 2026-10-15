@@ -354,8 +354,6 @@ def train(cfg: Config, num_scenes: int | None = None, verbose: bool = True) -> d
     ckpt = out_dir / "ckpt.pt"
     if rank == 0:
         val_loss = evaluate_loss(model, val_loader, cfg, device)
-        train_losses = [h["train_loss"] for h in history if "train_loss" in h]
-        final_train_loss = train_losses[-1] if train_losses else float("nan")
         history.append({"epoch": cfg.train.epochs, "val_loss": val_loss, "final": True})
         save_checkpoint(
             ckpt,
