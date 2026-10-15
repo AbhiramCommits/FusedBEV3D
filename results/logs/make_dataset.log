@@ -1,0 +1,28 @@
+$ python scripts/make_dataset.py --split train --scenes 40
+[make_dataset] dataset=synth split=train scenes=40 frames/scene=20 seed=1234
+[make_dataset] grid: BEV 64x64 cells @ 0.5 m (-16..16 m x, -16..16 m y), occupancy 5x64x64 @ 0.5 m z
+    generated 10/40 scenes
+    generated 20/40 scenes
+    generated 30/40 scenes
+    generated 40/40 scenes
+[make_dataset] wrote cache -> data/cache/synth_train.pt (239.2 MB)
+[make_dataset] frames           : 800 (40 scenes)
+[make_dataset] boxes total      : 4480
+[make_dataset]   car        : 2260
+[make_dataset]   pedestrian : 1400
+[make_dataset]   cyclist    : 820
+[make_dataset] points/frame     : 4634.9
+[make_dataset] occupancy voxels : free=7161107 (0.437) occupied=1637766 (0.1000) unknown=7585127 (0.463)
+
+$ python scripts/make_dataset.py --split val --scenes 10
+[make_dataset] dataset=synth split=val scenes=10 frames/scene=20 seed=1234
+[make_dataset] grid: BEV 64x64 cells @ 0.5 m (-16..16 m x, -16..16 m y), occupancy 5x64x64 @ 0.5 m z
+    generated 10/10 scenes
+[make_dataset] wrote cache -> data/cache/synth_val.pt (59.7 MB)
+[make_dataset] frames           : 200 (10 scenes)
+[make_dataset] boxes total      : 1060
+[make_dataset]   car        : 460
+[make_dataset]   pedestrian : 360
+[make_dataset]   cyclist    : 240
+[make_dataset] points/frame     : 4624.3
+[make_dataset] occupancy voxels : free=1847563 (0.451) occupied=425288 (0.1038) unknown=1823149 (0.445)

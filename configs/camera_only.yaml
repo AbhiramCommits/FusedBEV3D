@@ -1,0 +1,73 @@
+# FusedBEV3D - camera-only (ablation variant) configuration.
+# Identical to configs/fused.yaml except for `train.name` and `train.modalities`,
+# so the three ablation variants differ only in which encoders are enabled.
+
+grid:
+  x_range: [-16.0, 16.0]   # forward extent in metres
+  y_range: [-16.0, 16.0]   # lateral extent in metres
+  z_range: [-0.5, 2.0]     # occupancy height range in metres
+  voxel_size: 0.5          # BEV cell size (64 x 64 grid)
+  z_voxel_size: 0.5        # occupancy voxel height (5 levels)
+  bev_stride: 1
+
+data:
+  name: synth
+  num_scenes: 40
+  val_scenes: 10
+  frames_per_scene: 20
+  seed: 1234
+  min_actors: 3
+  max_actors: 8
+  num_beams: 32
+  num_azimuth: 192
+  max_range: 50.0
+  range_noise: 0.02
+  dropout: 0.08
+  elevation_min_deg: -25.0
+  elevation_max_deg: 3.0
+  image_height: 64
+  image_width: 192
+  camera_fov: 90.0
+  occupancy_range: 20.0
+  occupancy_step: 0.35
+  cache_dir: data/cache
+
+model:
+  num_classes: 3
+  class_names: [car, pedestrian, cyclist]
+  pillar_feat: 64
+  max_points_per_pillar: 32
+  max_pillars: 0
+  camera_context: 48
+  depth_bins: 8
+  depth_min: 2.0
+  depth_max: 30.0
+  fuse_channels: 64
+  bev_backbone_channels: 64
+  head_width: 64
+  reg_channels: 10
+  occupancy_classes: 3
+
+train:
+  name: camera_only
+  modalities: [camera]
+  epochs: 12
+  lr: 0.002
+  weight_decay: 0.0001
+  batch_size: 4
+  amp: true
+  warmup_frac: 0.05
+  grad_clip: 5.0
+  num_workers: 0
+  seed: 1234
+  device: auto
+  log_every: 20
+  eval_every: 0
+  loss_weights:
+    heatmap: 1.0
+    offset: 1.0
+    z: 1.0
+    dims: 1.0
+    rot: 1.0
+    vel: 0.2
+    occupancy: 1.0
